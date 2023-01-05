@@ -2,22 +2,33 @@ defmodule EcommerceCourseWeb.Router do
   use EcommerceCourseWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {EcommerceCourseWeb.LayoutView, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {EcommerceCourseWeb.LayoutView, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", EcommerceCourseWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :index
+    get("/", PageController, :index)
+  end
+
+  scope "/api/v1", EcommerceCourseWeb do
+    pipe_through(:api)
+
+    resources("/items", ItemController, except: [:new, :edit])
+    resources("/users", UserController, except: [:new, :edit])
+    resources("/orders", OrderController, except: [:new, :edit])
+    resources "/contact_info", ContactInfoController, except: [:new, :edit]
+    resources "/addresses", AddressController, except: [:new, :edit]
+    resources "/carts", CartController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
@@ -36,9 +47,9 @@ defmodule EcommerceCourseWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: EcommerceCourseWeb.Telemetry
+      live_dashboard("/dashboard", metrics: EcommerceCourseWeb.Telemetry)
     end
   end
 
@@ -48,9 +59,9 @@ defmodule EcommerceCourseWeb.Router do
   # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end
