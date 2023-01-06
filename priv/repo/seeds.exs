@@ -67,8 +67,3 @@ products_list = [
 ]
 
 Enum.each(products_list, &EcommerceCourse.Items.create_item/1)
-
-# orders
-
-orders_list = []
-Enum.each(products_list, &EcommerceCourse.Orders.create_order/1)
