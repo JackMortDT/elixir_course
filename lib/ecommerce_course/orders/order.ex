@@ -1,6 +1,9 @@
 defmodule EcommerceCourse.Orders.Order do
   use Ecto.Schema
   import Ecto.Changeset
+  alias EcommerceCourse.Orders.ContactInfo
+  alias EcommerceCourse.Users.User
+  alias EcommerceCourse.Orders.PaymentInfo
 
   @required_fields ~w(delivery_date location price status)a
 
@@ -12,6 +15,10 @@ defmodule EcommerceCourse.Orders.Order do
     field :status, :string
 
     timestamps()
+
+    belongs_to :contact_info, ContactInfo
+    belongs_to :user, User
+    embeds_one(:payment_info, PaymentInfo, on_replace: :update)
   end
 
   @doc false

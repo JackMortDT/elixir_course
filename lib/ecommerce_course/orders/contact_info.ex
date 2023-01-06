@@ -1,6 +1,7 @@
 defmodule EcommerceCourse.Orders.ContactInfo do
   use Ecto.Schema
   import Ecto.Changeset
+  alias EcommerceCourse.Addresses.Address
 
   @fields ~w(email phone)a
 
@@ -10,6 +11,8 @@ defmodule EcommerceCourse.Orders.ContactInfo do
     field :phone, :string
 
     timestamps()
+
+    belongs_to :address, Address
   end
 
   @doc false

@@ -1,6 +1,7 @@
 defmodule EcommerceCourse.Addresses.Address do
   use Ecto.Schema
   import Ecto.Changeset
+  alias EcommerceCourse.Users.User
 
   @required_fields ~w(country_code postal_code street neighborhood)a
   @optional_fields ~w(reference)a
@@ -14,6 +15,8 @@ defmodule EcommerceCourse.Addresses.Address do
     field :street, :string
 
     timestamps()
+
+    belongs_to :user, User
   end
 
   @doc false
