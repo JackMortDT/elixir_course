@@ -14,6 +14,10 @@ defmodule EcommerceCourseWeb.Router do
     plug(:accepts, ["json"])
   end
 
+  pipeline :maybe_browser_auth do
+    plug EcommerceCourse.AuthAccessPipeline
+  end
+
   scope "/", EcommerceCourseWeb do
     pipe_through(:browser)
 
@@ -21,7 +25,14 @@ defmodule EcommerceCourseWeb.Router do
   end
 
   scope "/api/v1", EcommerceCourseWeb do
-    pipe_through(:api)
+    pipe_through([:api])
+
+    post("/login", AuthController, :login)
+    post("/logout", AuthController, :logout)
+  end
+
+  scope "/api/v1", EcommerceCourseWeb do
+    pipe_through([:api, :maybe_browser_auth])
 
     resources("/items", ItemController, except: [:new, :edit])
     resources("/users", UserController, except: [:new, :edit])

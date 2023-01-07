@@ -37,6 +37,16 @@ defmodule EcommerceCourse.Users do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_user_by_username!(username) do
+    User
+    |> where([u], u.username == ^username)
+    |> Repo.one()
+    |> case do
+      nil -> {:error, nil}
+      user -> {:ok, user}
+    end
+  end
+
   @doc """
   Creates a user.
 

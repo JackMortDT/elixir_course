@@ -20,7 +20,7 @@ defmodule EcommerceCourse.MixProject do
   def application do
     [
       mod: {EcommerceCourse.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :guardian]
     ]
   end
 
@@ -49,7 +49,8 @@ defmodule EcommerceCourse.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:csv, "~> 3.0"}
+      {:csv, "~> 3.0"},
+      {:guardian, "~> 2.0"}
     ]
   end
 
