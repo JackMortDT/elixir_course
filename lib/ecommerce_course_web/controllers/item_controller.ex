@@ -7,7 +7,7 @@ defmodule EcommerceCourseWeb.ItemController do
   action_fallback EcommerceCourseWeb.FallbackController
 
   def index(conn, _params) do
-    items = Items.list_items()
+    items = Items.available_items()
     render(conn, "index.json", items: items)
   end
 

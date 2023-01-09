@@ -101,4 +101,17 @@ defmodule EcommerceCourse.Items do
   def change_item(%Item{} = item, attrs \\ %{}) do
     Item.create_changeset(item, attrs)
   end
+
+  @doc """
+  Validate the item is exist and available
+  ## Examples
+
+  iex> available_items()
+    [%Item{}, ...]
+  """
+  def available_items() do
+    Item
+    |> where([u], u.quantity > ^0)
+    |> Repo.all()
+  end
 end
