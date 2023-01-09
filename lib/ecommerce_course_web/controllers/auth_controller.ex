@@ -8,7 +8,6 @@ defmodule EcommerceCourseWeb.AuthController do
     with {:ok, user} <- Users.get_user_by_username!(username),
          true <- validate_password(user, password) do
       conn = Guardian.Plug.sign_in(conn, user)
-      IO.inspect(conn)
 
       json(conn, %{
         "token" => conn.private.guardian_default_token,

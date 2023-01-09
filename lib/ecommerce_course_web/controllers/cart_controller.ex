@@ -13,8 +13,12 @@ defmodule EcommerceCourseWeb.CartController do
     render(conn, "index.json", carts: carts)
   end
 
-  def create(conn, %{"cart" => cart_params}) do
-    with {:ok, %Cart{} = cart} <- Carts.create_cart(cart_params) do
+  def create(conn, _params) do
+    user = conn.private.guardian_default_resource
+
+    with {:ok, user_uuid} <- Ecto.UUID.cast(user.id),
+         {:ok, %Cart{} = cart} <-
+           Carts.create_cart(%{user_id: user_uuid}) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.cart_path(conn, :show, cart))
@@ -25,14 +29,6 @@ defmodule EcommerceCourseWeb.CartController do
   def show(conn, %{"id" => id}) do
     cart = Carts.get_cart!(id)
     render(conn, "show.json", cart: cart)
-  end
-
-  def update(conn, %{"id" => id, "cart" => cart_params}) do
-    cart = Carts.get_cart!(id)
-
-    with {:ok, %Cart{} = cart} <- Carts.update_cart(cart, cart_params) do
-      render(conn, "show.json", cart: cart)
-    end
   end
 
   def delete(conn, %{"id" => id}) do

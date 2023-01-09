@@ -56,24 +56,6 @@ defmodule EcommerceCourse.Carts do
   end
 
   @doc """
-  Updates a cart.
-
-  ## Examples
-
-      iex> update_cart(cart, %{field: new_value})
-      {:ok, %Cart{}}
-
-      iex> update_cart(cart, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_cart(%Cart{} = cart, attrs) do
-    cart
-    |> Cart.update_changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a cart.
 
   ## Examples

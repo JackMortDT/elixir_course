@@ -12,8 +12,7 @@ defmodule EcommerceCourseWeb.CartView do
 
   def render("cart.json", %{cart: cart}) do
     %{
-      id: cart.id,
-      quantity: cart.quantity
+      id: cart.id
     }
   end
 end

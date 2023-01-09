@@ -1,30 +1,23 @@
 defmodule EcommerceCourse.Carts.Cart do
   use Ecto.Schema
   import Ecto.Changeset
-  alias EcommerceCourse.Items.Item
-  alias EcommerceCourse.Orders.Order
-  @fields ~w(quantity)a
+  alias EcommerceCourse.Users.User
+  alias EcommerceCourse.Carts.CartItem
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
+  @foreign_key_type Ecto.UUID
   schema "carts" do
-    field :quantity, :integer, default: 0
-    timestamps()
+    belongs_to :user, User
+    has_many :carts, CartItem
 
-    many_to_many :items, Item, join_through: "cart_items"
-    belongs_to :order, Order
+    timestamps()
   end
 
   @doc false
   def create_changeset(cart, attrs) do
-    cart
-    |> cast(attrs, @fields)
-    |> validate_required(@fields)
-  end
+    IO.inspect(attrs)
 
-  @doc false
-  def update_changeset(cart, attrs) do
     cart
-    |> cast(attrs, @fields)
-    |> validate_required(@fields)
+    |> cast(attrs, [:user_id])
   end
 end
