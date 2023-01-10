@@ -20,8 +20,8 @@ defmodule EcommerceCourse.Addresses.Address do
   end
 
   @doc false
-  def create_changeset(address, attrs) do
-    address
+  def create_changeset(attrs) do
+    %__MODULE__{}
     |> cast(attrs, @optional_fields ++ @required_fields)
     |> validate_required(@required_fields)
   end

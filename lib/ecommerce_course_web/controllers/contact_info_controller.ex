@@ -14,7 +14,7 @@ defmodule EcommerceCourseWeb.ContactInfoController do
   def create(conn, %{"contact_info" => contact_info_params}) do
     user = conn.private.guardian_default_resource
 
-    with {:ok, %ContactInfo{} = contact_info} <-
+    with {:ok, %{contact_info: contact_info}} <-
            Orders.create_contact_info(contact_info_params, user) do
       conn
       |> put_status(:created)

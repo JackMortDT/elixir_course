@@ -5,10 +5,11 @@ defmodule EcommerceCourse.Orders do
 
   import Ecto.Query, warn: false
   alias EcommerceCourse.Utils
-  alias EcommerceCourse.Addresses
+  alias EcommerceCourse.Addresses.Address
   alias EcommerceCourse.Repo
+  alias Ecto.Multi
 
-  alias EcommerceCourse.Orders.Order
+  alias EcommerceCourse.Orders.{ContactInfo, Order}
 
   @doc """
   Returns the list of orders.
@@ -104,8 +105,6 @@ defmodule EcommerceCourse.Orders do
     Order.create_changeset(order, attrs)
   end
 
-  alias EcommerceCourse.Orders.ContactInfo
-
   @doc """
   Returns the list of contact_info.
 
@@ -151,13 +150,13 @@ defmodule EcommerceCourse.Orders do
     attrs = Utils.transform_string_map(attrs)
     address = Map.put(attrs.address, :user_id, user.id)
 
-    with {:ok, address} <- Addresses.create_address(address) do
+    Multi.new()
+    |> Multi.insert(:address, Address.create_changeset(address))
+    |> Multi.insert(:contact_info, fn %{address: address} ->
       contact_info = contact_info_structure(attrs, address)
-
-      %ContactInfo{}
-      |> ContactInfo.create_changeset(contact_info)
-      |> Repo.insert()
-    end
+      ContactInfo.create_changeset(contact_info)
+    end)
+    |> Repo.transaction()
   end
 
   defp contact_info_structure(%{phone: phone, email: email}, %{id: address_id}) do
@@ -211,7 +210,7 @@ defmodule EcommerceCourse.Orders do
       %Ecto.Changeset{data: %ContactInfo{}}
 
   """
-  def change_contact_info(%ContactInfo{} = contact_info, attrs \\ %{}) do
-    ContactInfo.create_changeset(contact_info, attrs)
+  def change_contact_info(attrs \\ %{}) do
+    ContactInfo.create_changeset(attrs)
   end
 end

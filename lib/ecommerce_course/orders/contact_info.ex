@@ -16,8 +16,8 @@ defmodule EcommerceCourse.Orders.ContactInfo do
   end
 
   @doc false
-  def create_changeset(contact_info, attrs) do
-    contact_info
+  def create_changeset(attrs) do
+    %__MODULE__{}
     |> cast(attrs, @fields)
     |> validate_required(@fields)
   end

@@ -50,8 +50,8 @@ defmodule EcommerceCourse.Addresses do
 
   """
   def create_address(attrs \\ %{}) do
-    %Address{}
-    |> Address.create_changeset(attrs)
+    attrs
+    |> Address.create_changeset()
     |> Repo.insert()
   end
 
@@ -98,7 +98,7 @@ defmodule EcommerceCourse.Addresses do
       %Ecto.Changeset{data: %Address{}}
 
   """
-  def change_address(%Address{} = address, attrs \\ %{}) do
-    Address.create_changeset(address, attrs)
+  def change_address(attrs \\ %{}) do
+    Address.create_changeset(attrs)
   end
 end
