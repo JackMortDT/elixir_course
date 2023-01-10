@@ -37,7 +37,7 @@ defmodule EcommerceCourse.Carts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_cart!(id), do: Repo.get!(Cart, id)
+  def get_cart!(id), do: Repo.get!(Cart, id) |> preload_cart()
 
   @doc """
   Creates a cart.
@@ -98,21 +98,34 @@ defmodule EcommerceCourse.Carts do
     |> validate_cart_item()
     |> case do
       nil ->
-        %CartItem{}
-        |> CartItem.create_changeset(attrs)
-        |> Repo.insert()
+        create_cart_item(attrs)
 
       cart ->
         update_cart_item(cart, attrs)
     end
   end
 
-  def update_cart_item(cart, attrs) do
-    quantity = cart_item_quantity(cart.quantity, attrs.quantity)
+  defp create_cart_item(%{quantity: quantity}) when quantity <= 0 do
+    {:error, "Item was not added"}
+  end
 
-    cart
-    |> CartItem.update_changeset(%{quantity: quantity})
-    |> Repo.update()
+  defp create_cart_item(attrs) do
+    %CartItem{}
+    |> CartItem.create_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_cart_item(cart, attrs) do
+    case cart_item_quantity(cart.quantity, attrs.quantity) do
+      0 ->
+        _ = Repo.delete(cart)
+        {:ok, "Item was deleted"}
+
+      quantity ->
+        cart
+        |> CartItem.update_changeset(%{quantity: quantity})
+        |> Repo.update()
+    end
   end
 
   defp cart_item_quantity(cart_quantity, updatable_quantity) do

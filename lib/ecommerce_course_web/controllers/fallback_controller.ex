@@ -21,4 +21,11 @@ defmodule EcommerceCourseWeb.FallbackController do
     |> put_view(EcommerceCourseWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, message}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(EcommerceCourseWeb.ErrorView)
+    |> json(%{message: message})
+  end
 end

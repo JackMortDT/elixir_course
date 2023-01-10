@@ -4,6 +4,7 @@ defmodule EcommerceCourseWeb.CartController do
   alias EcommerceCourse.Carts.CartItem
   alias EcommerceCourse.Carts
   alias EcommerceCourse.Carts.Cart
+  alias EcommerceCourseWeb.FallbackController
   # alias EcommerceCourse.Items
   # alias EcommerceCourse.Items.Item
 
@@ -38,6 +39,14 @@ defmodule EcommerceCourseWeb.CartController do
         item_id: cart_item.item_id,
         cart_id: cart_item.cart_id
       })
+    else
+      {:ok, message} ->
+        conn
+        |> put_status(:ok)
+        |> json(%{message: message})
+
+      other ->
+        FallbackController.call(conn, other)
     end
   end
 
