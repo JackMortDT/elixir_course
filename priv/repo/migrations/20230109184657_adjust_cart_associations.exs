@@ -2,7 +2,7 @@ defmodule EcommerceCourse.Repo.Migrations.AdjustCartAssociations do
   use Ecto.Migration
 
   def change do
-    alter table(:carts_items) do
+    alter table(:cart_items) do
       add :quantity, :integer, null: false
     end
 

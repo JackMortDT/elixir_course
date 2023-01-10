@@ -1,13 +1,13 @@
 defmodule EcommerceCourse.Carts.CartItem do
-  use Ecto.Schema
+  use EcommerceCourse.Schema
   import Ecto.Changeset
 
   alias EcommerceCourse.Carts.Cart
   alias EcommerceCourse.Items.Item
 
-  @fields ~w(quantity cart_id item_id)a
+  @creation_fields ~w(quantity cart_id item_id)a
+  @updatable_fields ~w(quantity)a
 
-  @primary_key false
   schema "cart_items" do
     field :quantity, :integer
 
@@ -15,9 +15,14 @@ defmodule EcommerceCourse.Carts.CartItem do
     belongs_to :item, Item
   end
 
-  def changeset(cart_item, attrs) do
+  def create_changeset(cart_item, attrs) do
     cart_item
-    |> cast(attrs, @fields)
-    |> validate_required(@fields)
+    |> cast(attrs, @creation_fields)
+    |> validate_required(@creation_fields)
+  end
+
+  def update_changeset(cart_item, attrs) do
+    cart_item
+    |> cast(attrs, @updatable_fields)
   end
 end
