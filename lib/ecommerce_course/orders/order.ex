@@ -14,12 +14,12 @@ defmodule EcommerceCourse.Orders.Order do
     field :price, :float
     field :status, :string
 
-    timestamps()
-
     belongs_to :contact_info, ContactInfo
     belongs_to :user, User
     belongs_to :cart, Cart
     embeds_one(:payment_info, PaymentInfo, on_replace: :update)
+
+    timestamps()
   end
 
   @doc false

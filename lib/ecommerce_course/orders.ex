@@ -4,6 +4,8 @@ defmodule EcommerceCourse.Orders do
   """
 
   import Ecto.Query, warn: false
+  alias EcommerceCourse.Utils
+  alias EcommerceCourse.Addresses
   alias EcommerceCourse.Repo
 
   alias EcommerceCourse.Orders.Order
@@ -145,10 +147,25 @@ defmodule EcommerceCourse.Orders do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_contact_info(attrs \\ %{}) do
-    %ContactInfo{}
-    |> ContactInfo.create_changeset(attrs)
-    |> Repo.insert()
+  def create_contact_info(attrs \\ %{}, user) do
+    attrs = Utils.transform_string_map(attrs)
+    address = Map.put(attrs.address, :user_id, user.id)
+
+    with {:ok, address} <- Addresses.create_address(address) do
+      contact_info = contact_info_structure(attrs, address)
+
+      %ContactInfo{}
+      |> ContactInfo.create_changeset(contact_info)
+      |> Repo.insert()
+    end
+  end
+
+  defp contact_info_structure(%{phone: phone, email: email}, %{id: address_id}) do
+    %{
+      phone: phone,
+      email: email,
+      address_id: address_id
+    }
   end
 
   @doc """

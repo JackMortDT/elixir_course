@@ -1,9 +1,9 @@
 defmodule EcommerceCourse.Orders.ContactInfo do
-  use Ecto.Schema
+  use EcommerceCourse.Schema
   import Ecto.Changeset
   alias EcommerceCourse.Addresses.Address
 
-  @fields ~w(email phone)a
+  @fields ~w(email phone address_id)a
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
   schema "contact_info" do

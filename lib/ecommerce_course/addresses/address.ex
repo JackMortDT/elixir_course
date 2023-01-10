@@ -1,9 +1,9 @@
 defmodule EcommerceCourse.Addresses.Address do
-  use Ecto.Schema
+  use EcommerceCourse.Schema
   import Ecto.Changeset
   alias EcommerceCourse.Users.User
 
-  @required_fields ~w(country_code postal_code street neighborhood)a
+  @required_fields ~w(country_code postal_code street neighborhood user_id)a
   @optional_fields ~w(reference)a
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
