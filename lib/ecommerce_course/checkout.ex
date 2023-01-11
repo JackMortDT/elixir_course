@@ -3,7 +3,6 @@ defmodule EcommerceCourse.Checkout do
   Checkout logic
   """
 
-  alias EcommerceCourse.Orders.PaymentInfo
   alias Ecto.Multi
   alias EcommerceCourse.Orders.Order
   alias EcommerceCourse.Items.Item
@@ -16,8 +15,7 @@ defmodule EcommerceCourse.Checkout do
   def submit_order(order, payment) do
     with :ok <- validate_phone(order),
          {:ok, alg} <- verify_order(order, payment) do
-      require IEx
-      IEx.pry()
+      {:ok, alg.update_payment_info}
     end
   end
 
@@ -29,16 +27,15 @@ defmodule EcommerceCourse.Checkout do
 
   defp verify_order(order, payment) do
     Multi.new()
-    # |> Multi.update(:order, Order.update_changeset(order, %{status: "in_process"}))
+    |> Multi.update(:order, Order.update_changeset(order, %{status: "in_process"}))
     |> Multi.merge(fn _somethin ->
       order
       |> Repo.preload(cart: [items: :item])
-      |> IO.inspect()
       |> apply_inventory_reductions()
     end)
-    |> Multi.update(:order, fn %{order: order} ->
+    |> Multi.run(:update_payment_info, fn repo, %{order: order} ->
       order = Repo.preload(order, cart: [items: :item])
-      save_payment_info(payment, order)
+      save_payment_info(payment, order) |> repo.update()
     end)
     |> Repo.transaction()
   end
@@ -66,7 +63,6 @@ defmodule EcommerceCourse.Checkout do
     |> String.length()
     |> create_payment_struct(payment_info, order)
     |> then(&Order.payment_changeset(order, &1))
-    |> IO.inspect()
   end
 
   defp save_payment_info(_paymet_info, _order),
