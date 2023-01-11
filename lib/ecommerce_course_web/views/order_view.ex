@@ -16,7 +16,8 @@ defmodule EcommerceCourseWeb.OrderView do
       price: order.price,
       status: order.status,
       location: order.location,
-      delivery_date: order.delivery_date
+      delivery_date: order.delivery_date,
+      payment_info: Map.from_struct(order.payment_info)
     }
   end
 end

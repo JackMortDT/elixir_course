@@ -62,6 +62,7 @@ defmodule EcommerceCourse.Checkout do
     card_number
     |> String.length()
     |> create_payment_struct(payment_info, order)
+    |> set_order_fields()
     |> then(&Order.payment_changeset(order, &1))
   end
 
@@ -81,4 +82,14 @@ defmodule EcommerceCourse.Checkout do
 
   defp create_payment_struct(_card_lenght, _payment_info, _order),
     do: {:error, "Please validate card number"}
+
+  defp set_order_fields(payment_attrs) do
+    order_fields = %{
+      price: payment_attrs.amount,
+      status: "confirmed",
+      delivery_date: NaiveDateTime.add(NaiveDateTime.utc_now(), 2, :day)
+    }
+
+    {order_fields, payment_attrs}
+  end
 end

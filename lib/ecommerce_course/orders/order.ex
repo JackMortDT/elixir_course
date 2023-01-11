@@ -6,6 +6,7 @@ defmodule EcommerceCourse.Orders.Order do
   alias EcommerceCourse.Orders.{ContactInfo, PaymentInfo}
 
   @required_fields ~w(location contact_info_id user_id cart_id)a
+  @optional_fields ~w(delivery_date status price)a
 
   schema "orders" do
     field :delivery_date, :utc_datetime_usec
@@ -34,9 +35,9 @@ defmodule EcommerceCourse.Orders.Order do
     |> cast(attrs, @required_fields)
   end
 
-  def payment_changeset(order, payment_info) do
+  def payment_changeset(order, {order_attrs, payment_info}) do
     order
-    |> cast(%{}, [])
+    |> cast(order_attrs, @optional_fields)
     |> put_embed(:payment_info, payment_info)
   end
 end
