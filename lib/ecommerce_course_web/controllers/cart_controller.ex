@@ -37,7 +37,8 @@ defmodule EcommerceCourseWeb.CartController do
       |> json(%{
         quantity: cart_item.quantity,
         item_id: cart_item.item_id,
-        cart_id: cart_item.cart_id
+        cart_id: cart_item.cart_id,
+        price: inspect(cart_item.price)
       })
     else
       {:ok, message} ->

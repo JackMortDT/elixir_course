@@ -4,6 +4,7 @@ defmodule EcommerceCourse.Carts do
   """
 
   import Ecto.Query, warn: false
+  alias EcommerceCourse.Items
   alias EcommerceCourse.Utils
   alias EcommerceCourse.Repo
 
@@ -52,8 +53,8 @@ defmodule EcommerceCourse.Carts do
 
   """
   def create_cart(attrs \\ %{}) do
-    %Cart{}
-    |> Cart.create_changeset(attrs)
+    attrs
+    |> Cart.create_changeset()
     |> Repo.insert()
   end
 
@@ -82,8 +83,8 @@ defmodule EcommerceCourse.Carts do
       %Ecto.Changeset{data: %Cart{}}
 
   """
-  def change_cart(%Cart{} = cart, attrs \\ %{}) do
-    Cart.create_changeset(cart, attrs)
+  def change_cart(attrs \\ %{}) do
+    Cart.create_changeset(attrs)
   end
 
   @doc """
@@ -93,6 +94,7 @@ defmodule EcommerceCourse.Carts do
   """
   def add_cart_items(attrs) do
     attrs = Utils.transform_string_map(attrs)
+    attrs = Map.put(attrs, :item, Items.get_item!(attrs.item_id))
 
     attrs
     |> validate_cart_item()
@@ -110,8 +112,9 @@ defmodule EcommerceCourse.Carts do
   end
 
   defp create_cart_item(attrs) do
-    %CartItem{}
-    |> CartItem.create_changeset(attrs)
+    attrs
+    |> get_price_from_cart_items(nil)
+    |> CartItem.create_changeset()
     |> Repo.insert()
   end
 
@@ -123,9 +126,19 @@ defmodule EcommerceCourse.Carts do
 
       quantity ->
         cart
+        |> Repo.preload([:item])
+        |> get_price_from_cart_items(quantity)
         |> CartItem.update_changeset(%{quantity: quantity})
         |> Repo.update()
     end
+  end
+
+  defp get_price_from_cart_items(%{quantity: qty, item: %{price: price}} = cart_item, nil) do
+    Map.put(cart_item, :price, price * qty)
+  end
+
+  defp get_price_from_cart_items(%{item: %{price: price}} = cart_item, qty) do
+    Map.put(cart_item, :price, price * qty)
   end
 
   defp cart_item_quantity(cart_quantity, updatable_quantity) do
@@ -146,6 +159,6 @@ defmodule EcommerceCourse.Carts do
   end
 
   def preload_cart(cart) do
-    Repo.preload(cart, [:user, :carts])
+    Repo.preload(cart, [:user, :items])
   end
 end

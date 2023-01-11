@@ -7,14 +7,14 @@ defmodule EcommerceCourse.Carts.Cart do
 
   schema "carts" do
     belongs_to :user, User
-    has_many :carts, CartItem
+    has_many :items, CartItem
 
     timestamps()
   end
 
   @doc false
-  def create_changeset(cart, attrs) do
-    cart
+  def create_changeset(attrs) do
+    %__MODULE__{}
     |> cast(attrs, [:user_id])
   end
 end

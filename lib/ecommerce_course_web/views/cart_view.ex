@@ -10,11 +10,11 @@ defmodule EcommerceCourseWeb.CartView do
     %{data: render_one(cart, CartView, "cart.json")}
   end
 
-  def render("cart.json", %{cart: %{id: id, user: user, carts: carts}}) do
+  def render("cart.json", %{cart: %{id: id, user: user, items: items}}) do
     %{
       id: id,
       username: user.username,
-      cart_items: render_many(carts, CartView, "show_cart_item.json")
+      cart_items: render_many(items, CartView, "show_cart_item.json")
     }
   end
 

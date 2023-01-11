@@ -28,5 +28,6 @@ defmodule EcommerceCourse.Items.Item do
   def update_changeset(item, attrs) do
     item
     |> cast(attrs, @optional_fields ++ @required_fields)
+    |> validate_number(:quantity, greater_than_or_equal_to: 0)
   end
 end

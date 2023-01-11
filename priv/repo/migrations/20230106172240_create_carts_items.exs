@@ -4,6 +4,8 @@ defmodule EcommerceCourse.Repo.Migrations.CreateCartsItems do
   def change do
     create table(:cart_items, primary_key: false) do
       add :id, :uuid, primary_key: true, null: false
+      add :quantity, :integer, null: false
+      add :price, :float
       add :cart_id, references(:carts, type: :uuid), null: false
       add :item_id, references(:items, type: :uuid), null: false
     end

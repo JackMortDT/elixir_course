@@ -6,10 +6,11 @@ defmodule EcommerceCourse.Orders.PaymentInfo do
 
   embedded_schema do
     field :payment_method, Ecto.Enum,
-      values: [:credit_card, :paypal_account],
+      values: [:credit_card],
       default: :credit_card
 
     field :last_four, :string
+    field :amount, :float
     field :email, :string
   end
 
