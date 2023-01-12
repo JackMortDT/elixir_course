@@ -60,7 +60,7 @@ defmodule EcommerceCourse.Orders do
     attrs
     |> Order.create_changeset()
     |> Repo.insert!()
-    |> Repo.preload([:user, :contact_info, :cart])
+    |> Repo.preload([:user, :contact_info, [cart: :items]])
     |> Checkout.submit_order(payment_info)
   end
 
