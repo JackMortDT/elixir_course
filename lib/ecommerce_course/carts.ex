@@ -96,7 +96,8 @@ defmodule EcommerceCourse.Carts do
   def add_cart_items(attrs) do
     attrs = Utils.transform_string_map(attrs)
 
-    with {:ok, %Item{} = item} <- Items.get_one_item(attrs.item_id) do
+    with {:ok, _message} <- cart_has_order(attrs.cart_id),
+         {:ok, %Item{} = item} <- Items.get_one_item(attrs.item_id) do
       attrs = Map.put(attrs, :item, item)
 
       attrs
@@ -110,6 +111,17 @@ defmodule EcommerceCourse.Carts do
       end
     end
   end
+
+  defp cart_has_order(cart_id) do
+    Cart
+    |> where([c], c.id == ^cart_id)
+    |> preload([:order])
+    |> Repo.one()
+    |> has_order()
+  end
+
+  defp has_order(%{order: nil}), do: {:ok, "Cart doesn't have order"}
+  defp has_order(_order), do: {:error, "Cart has order"}
 
   defp create_cart_item(%{quantity: quantity}) when quantity <= 0 do
     {:error, "Item was not added"}
