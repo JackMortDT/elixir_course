@@ -4,6 +4,7 @@ defmodule EcommerceCourse.Items do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.UUID
   alias EcommerceCourse.Repo
 
   alias EcommerceCourse.Items.Item
@@ -37,7 +38,23 @@ defmodule EcommerceCourse.Items do
   """
   def get_item!(id), do: Repo.get!(Item, id)
 
-  def get_item(id), do: Repo.get(Item, id)
+  def get_one(id) do
+    with %Item{} = item <- Repo.one(where(Item, [i], i.id == ^id)) do
+      {:ok, item}
+    else
+      nil -> {:error, "Item not found"}
+    end
+  end
+
+  def get_one_item(id) do
+    case UUID.cast(id) do
+      {:ok, id} ->
+        get_one(id)
+
+      :error ->
+        {:error, "Cannot cast item uuid"}
+    end
+  end
 
   @doc """
   Creates a item.

@@ -14,8 +14,8 @@ defmodule EcommerceCourse.Checkout do
 
   def submit_order(order, payment) do
     with :ok <- validate_phone(order),
-         {:ok, alg} <- verify_order(order, payment) do
-      {:ok, alg.update_payment_info}
+         {:ok, order} <- verify_order(order, payment) do
+      {:ok, order.update_payment_info}
     end
   end
 
@@ -28,7 +28,7 @@ defmodule EcommerceCourse.Checkout do
   defp verify_order(order, payment) do
     Multi.new()
     |> Multi.update(:order, Order.update_changeset(order, %{status: "in_process"}))
-    |> Multi.merge(fn _somethin ->
+    |> Multi.merge(fn _something ->
       order
       |> Repo.preload(cart: [items: :item])
       |> apply_inventory_reductions()

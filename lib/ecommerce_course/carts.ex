@@ -5,6 +5,7 @@ defmodule EcommerceCourse.Carts do
 
   import Ecto.Query, warn: false
   alias EcommerceCourse.Items
+  alias EcommerceCourse.Items.Item
   alias EcommerceCourse.Utils
   alias EcommerceCourse.Repo
 
@@ -94,16 +95,19 @@ defmodule EcommerceCourse.Carts do
   """
   def add_cart_items(attrs) do
     attrs = Utils.transform_string_map(attrs)
-    attrs = Map.put(attrs, :item, Items.get_item!(attrs.item_id))
 
-    attrs
-    |> validate_cart_item()
-    |> case do
-      nil ->
-        create_cart_item(attrs)
+    with {:ok, %Item{} = item} <- Items.get_one_item(attrs.item_id) do
+      attrs = Map.put(attrs, :item, item)
 
-      cart ->
-        update_cart_item(cart, attrs)
+      attrs
+      |> validate_cart_item()
+      |> case do
+        nil ->
+          create_cart_item(attrs)
+
+        cart ->
+          update_cart_item(cart, attrs)
+      end
     end
   end
 
