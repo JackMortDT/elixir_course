@@ -35,7 +35,6 @@ defmodule EcommerceCourseWeb.Telemetry do
         unit: {:native, :millisecond},
         tags: [:request_path]
       ),
-      counter("http.request.stop.duration"),
 
       # Database Metrics
       summary("ecommerce_course.repo.query.total_time",
@@ -64,7 +63,10 @@ defmodule EcommerceCourseWeb.Telemetry do
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),
       summary("vm.total_run_queue_lengths.cpu"),
-      summary("vm.total_run_queue_lengths.io")
+      summary("vm.total_run_queue_lengths.io"),
+
+      # Custom metrics
+      counter("http.request.stop.duration")
     ]
   end
 
