@@ -45,6 +45,7 @@ defmodule EcommerceCourse.MixProject do
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics_statsd, "~> 0.6.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
