@@ -51,7 +51,7 @@ defmodule EcommerceCourse.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:csv, "~> 3.0"},
       {:guardian, "~> 2.0"},
-      {:flame_on, "~> 0.5.2"}
+      {:xprof, "~> 2.0.0-rc.5"}
     ]
   end
 
