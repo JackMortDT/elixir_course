@@ -57,4 +57,30 @@ config :ecommerce_course, EcommerceCourse.AuthAccessPipeline,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+# config :web_app, WebApp.PromEx,
+#   grafana: [
+#     host: "http://localhost:3000",
+#     username: "<YOUR_USERNAME>",  # Or authenticate via Basic Auth
+#     password: "<YOUR_PASSWORD>"
+#     auth_token: "<YOUR_AUTH_TOKEN_HERE>", # Or authenticate via API Token
+#     upload_dashboards_on_start: true # This is an optional setting and will default to `true`
+#   ]
+
+config :ecommerce_course, EcommerceCourse.PromEx,
+  manual_metrics_start_delay: :no_delay,
+  drop_metrics_groups: [],
+  grafana: [
+    host: "http://localhost:3000",
+    # Or authenticate via Basic Auth
+    username: "admin",
+    password: "admin",
+    # Or authenticate via API Token
+    auth_token:
+      "eyJrIjoidTJhUUhMVTd6eVUwSkJaODY3UEZvWHpoemJRNlRrdVYiLCJuIjoiUHJvbUV4IiwiaWQiOjF9",
+    # This is an optional setting and will default to `true`
+    upload_dashboards_on_start: true,
+    annotate_app_lifecycle: true,
+    folder_name: "Todo App Dashboards"
+  ]
+
 import_config "#{config_env()}.exs"
