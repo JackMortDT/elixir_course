@@ -10,11 +10,6 @@ defmodule EcommerceCourseWeb.CartController do
 
   action_fallback EcommerceCourseWeb.FallbackController
 
-  def index(conn, _params) do
-    carts = Carts.list_carts()
-    render(conn, "index.json", carts: carts)
-  end
-
   def create(conn, _params) do
     user = conn.private.guardian_default_resource
 

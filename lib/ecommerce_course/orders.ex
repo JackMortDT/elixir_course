@@ -115,19 +115,6 @@ defmodule EcommerceCourse.Orders do
   end
 
   @doc """
-  Returns the list of contact_info.
-
-  ## Examples
-
-      iex> list_contact_info()
-      [%ContactInfo{}, ...]
-
-  """
-  def list_contact_info do
-    Repo.all(ContactInfo)
-  end
-
-  @doc """
   Gets a single contact_info.
 
   Raises `Ecto.NoResultsError` if the Contact info does not exist.

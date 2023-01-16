@@ -6,11 +6,6 @@ defmodule EcommerceCourseWeb.ContactInfoController do
 
   action_fallback EcommerceCourseWeb.FallbackController
 
-  def index(conn, _params) do
-    contact_info = Orders.list_contact_info()
-    render(conn, "index.json", contact_info: contact_info)
-  end
-
   def create(conn, %{"contact_info" => contact_info_params}) do
     user = conn.private.guardian_default_resource
 
