@@ -4,13 +4,15 @@ defmodule EcommerceCourse.Orders do
   """
 
   import Ecto.Query, warn: false
+  alias EcommerceCourse.Metrics.Metrics
   alias EcommerceCourse.Checkout
   alias EcommerceCourse.Utils
   alias EcommerceCourse.Addresses.Address
   alias EcommerceCourse.Repo
   alias Ecto.Multi
-
   alias EcommerceCourse.Orders.{ContactInfo, Order}
+
+  use EcommerceCourse.Metrics.Metrics
 
   @doc """
   Returns the list of orders.
@@ -54,6 +56,7 @@ defmodule EcommerceCourse.Orders do
 
   """
   def create_order(attrs \\ %{}, payment_info_params) do
+    Metrics.count()
     payment_info = Utils.transform_string_map(payment_info_params)
     attrs = Utils.transform_string_map(attrs)
 

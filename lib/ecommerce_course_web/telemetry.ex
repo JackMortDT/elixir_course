@@ -66,7 +66,10 @@ defmodule EcommerceCourseWeb.Telemetry do
       summary("vm.total_run_queue_lengths.io"),
 
       # Custom metrics
-      counter("http.request.stop.duration")
+      counter("http.request.stop.duration"),
+      counter("ecommerce_course.orders.create_order.count",
+        description: "Count every order call"
+      )
     ]
   end
 
